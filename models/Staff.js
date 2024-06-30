@@ -15,6 +15,15 @@ const staffSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  invitedBy: {
+    type: String,
+    required: true,
+  },
+  inviteStaff: [
+    {
+      type: String,
+    },
+  ],
   classes: [
     {
       type: mongoose.Schema.Types.ObjectId,

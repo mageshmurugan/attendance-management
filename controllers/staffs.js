@@ -6,17 +6,37 @@ import Staff from "../models/Staff.js";
 // console.log(isMatch);
 
 export const register = async (req, res) => {
-  const { email, password, name } = req.body;
+  const { querytoken } = req.query;
+  const { name, password } = req.body;
+  const { staffEmail, staffId } = jwt.verify(
+    querytoken,
+    process.env.JWT_SECRET
+  );
+  // const { email, password, name } = req.body;
   console.log(req.body);
   const hash = bcrypt.hashSync(password, 10);
+  const invitedBy = await Staff.findById(staffId);
+  invitedBy.inviteStaff.push(staffEmail);
+  await invitedBy.save();
   const staff = new Staff({
     name,
-    email,
+    email: staffEmail,
     password: hash,
+    invitedBy: invitedBy.email,
   });
   await staff.save();
   const token = jwt.sign({ staffId: staff._id }, process.env.JWT_SECRET);
   return res.json({ token });
+};
+
+export const inviteStaff = async (req, res) => {
+  const { email, id } = req.body;
+  const StaffMail = jwt.sign(
+    { staffEmail: email, staffId: id },
+    process.env.JWT_SECRET
+  );
+  console.log(StaffMail);
+  return res.json({ message: "Staff invite sent" });
 };
 
 export const login = async (req, res) => {

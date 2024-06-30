@@ -6,6 +6,7 @@ import express from "express";
 import mongoose from "mongoose";
 import staffsRoutes from "./routes/staffs.js";
 import classRoutes from "./routes/classes.js";
+import studentRoutes from "./routes/students.js";
 
 const dbUrl = process.env.DB_URL;
 async function connectToDatabase() {
@@ -24,6 +25,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use("/staffs", staffsRoutes);
 app.use("/class", classRoutes);
+app.use("/student", studentRoutes);
 
 const port = process.env.PORT;
 
