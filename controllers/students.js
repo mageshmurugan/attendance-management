@@ -39,3 +39,27 @@ export const login = async (req, res) => {
   console.log(student);
   return res.json({ token });
 };
+
+export const getStudent = async (req, res) => {
+  let token;
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.startsWith("Bearer")
+  ) {
+    token = req.headers.authorization.split(" ")[1];
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const student = await Student.findById(decoded.studentId);
+    if (!student) {
+      return res.status(404).json({ message: "Student not found" });
+    }
+    return res.json({
+      name: student.name,
+      email: student.email,
+      studentId: student.studentId,
+      expectedTotalHours: student.expectedTotalHours,
+      hoursAttended: student.hoursAttended,
+      hoursFinished: student.hoursFinished,
+    });
+  }
+  return res.status(401).json({ message: "Unauthorized" });
+};

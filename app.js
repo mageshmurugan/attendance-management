@@ -7,6 +7,7 @@ import mongoose from "mongoose";
 import staffsRoutes from "./routes/staffs.js";
 import classRoutes from "./routes/classes.js";
 import studentRoutes from "./routes/students.js";
+import cors from "cors";
 
 const dbUrl = process.env.DB_URL;
 async function connectToDatabase() {
@@ -21,6 +22,7 @@ connectToDatabase();
 
 const app = express();
 app.use(express.json());
+app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 
 app.use("/staffs", staffsRoutes);

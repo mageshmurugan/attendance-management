@@ -50,8 +50,30 @@ export const login = async (req, res) => {
     return res.status(400).json({ message: "Invalid credentials" });
   }
   const token = jwt.sign({ staffId: staff._id }, process.env.JWT_SECRET);
-  console.log(staff);
+  // console.log(staff);
   return res.json({ token });
+};
+
+export const getStaff = async (req, res) => {
+  let token;
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.startsWith("Bearer")
+  ) {
+    token = req.headers.authorization.split(" ")[1];
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const staff = await Staff.findById(decoded.staffId).populate("classes");
+    if (!staff) {
+      return res.status(404).json({ message: "Staff not found" });
+    }
+    console.log(staff);
+    return res.json({
+      name: staff.name,
+      email: staff.email,
+      class: staff.classes,
+    });
+  }
+  return res.status(401).json({ message: "Not authorized" });
 };
 
 export const forgotPassword = async (req, res) => {

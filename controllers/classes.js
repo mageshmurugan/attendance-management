@@ -3,9 +3,6 @@ import Class from "../models/Class.js";
 import Staff from "../models/Staff.js";
 import jwt from "jsonwebtoken";
 import readline from "readline";
-import { get } from "http";
-import { type } from "os";
-import { parse } from "path";
 
 export const createClass = async (req, res) => {
   const { year, section, department, expectedTotalHours, staffToken } =
